@@ -1,20 +1,12 @@
 [
   {
-    "id": "semecourt-2026",
-    "titre": "Sémécourt – 2026",
+    "titre": "Carte de Sémécourt",
     "region": "Grand Est",
     "commune": "Sémécourt",
-    "date": "2026-05-14",
-    "echelle": "1:10000",
-    "formats": [
-      {
-        "label": "PDF géoréférencé",
-        "url": "/cartes/grand-est/semecourt/carte_2026_georef.pdf"
-      },
-      {
-        "label": "Pack ZIP",
-        "url": "/cartes/grand-est/semecourt/carte_2026.zip"
-      }
-    ]
+    "date": "2026",
+    "echelle": "1:4000",
+
+    "image": "./data/SEMECOURT.png",
+    "pgw": "./data/SEMECOURT.pgw"
   }
 ]

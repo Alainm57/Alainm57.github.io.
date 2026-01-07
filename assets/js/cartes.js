@@ -1,27 +1,50 @@
-container.innerHTML = cartes.map(c => {
-  const titre = c.titre ?? "Carte";
-  const meta = [
-    c.commune ?? "",
-    c.echelle ? `Échelle ${c.echelle}` : "",
-    c.date ?? ""
-  ].filter(Boolean).join(" — ");
+async function loadCartes() {
+  const container = document.getElementById("cartes-list");
+  if (!container) return;
 
-  return `
-    <div class="card">
-      <h2>${titre}</h2>
-      <p class="meta">${meta}</p>
+  try {
+    const res = await fetch("/cartes/index.json?v=20260107-1", {
+      cache: "no-store"
+    });
 
-      <img
-        src="${c.image}"
-        alt="${titre}"
-        style="max-width:100%; border:1px solid #ccc; border-radius:8px"
-      />
+    if (!res.ok) {
+      throw new Error("HTTP " + res.status);
+    }
 
-      <p>
-        <a class="btn" href="${c.pgw}">
-          Télécharger le fichier PGW
-        </a>
-      </p>
-    </div>
-  `;
-}).join("");
+    const cartes = await res.json();
+
+    if (!Array.isArray(cartes) || cartes.length === 0) {
+      container.innerHTML = "<p>Aucune carte disponible.</p>";
+      return;
+    }
+
+    container.innerHTML = cartes.map(c => {
+      return `
+        <div class="card">
+          <h2>${c.titre}</h2>
+          <p class="meta">
+            ${c.commune} — Échelle ${c.echelle} — ${c.date}
+          </p>
+
+          <img
+            src="${c.image}"
+            alt="${c.titre}"
+            style="max-width:100%; border:1px solid #ccc; border-radius:8px"
+          />
+
+          <p>
+            <a class="btn" href="${c.pgw}">
+              Télécharger le fichier PGW
+            </a>
+          </p>
+        </div>
+      `;
+    }).join("");
+
+  } catch (e) {
+    container.innerHTML =
+      "<p>Erreur lors du chargement des cartes : " + e.message + "</p>";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadCartes);

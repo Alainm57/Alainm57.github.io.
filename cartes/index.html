@@ -1,12 +1,145 @@
-<main class="wrap">
-  <h1>Cartes disponibles</h1>
-  <p>Téléchargements de cartes géoréférencées.</p>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <div id="cartes-list">
-    <p>Chargement…</p>
-  </div>
-</main>
+  <title>E_PUNCH – Cartes</title>
+  <link rel="stylesheet" href="/assets/css/site.css" />
 
-<script src="../assets/js/cartes.js?v=20260107-1"></script>
+  <style>
+    .page-title { margin: 18px 0 6px; }
+    .page-subtitle { margin: 0 0 18px; opacity: .8; }
 
+    .cards { display: grid; gap: 14px; }
 
+    .card {
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,.6);
+    }
+
+    .row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .thumb {
+      width: 220px;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,.12);
+      display: block;
+    }
+
+    .body { flex: 1 1 260px; }
+    .body h3 { margin: 0 0 6px; }
+
+    .meta { opacity: .85; margin: 0 0 10px; }
+    .note { font-size: .95em; opacity: .75; margin: 0; }
+
+    .error {
+      padding: 10px 12px;
+      border: 1px solid rgba(255,0,0,.25);
+      border-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="/">E_PUNCH</a>
+
+      <nav class="nav">
+        <a href="/app/">L’app</a>
+        <a href="/cartes/">Cartes</a>
+        <a href="/support/">Support</a>
+        <a href="/legal/">Mentions légales</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTENU -->
+  <main class="wrap">
+    <h1 class="page-title">Cartes</h1>
+    <p class="page-subtitle">
+      Aperçu des cartes disponibles. Les cartes complètes sont destinées à l’application E_PUNCH.
+    </p>
+
+    <div id="cartes-list" class="cards">
+      <p>Chargement…</p>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="wrap">© E_PUNCH</div>
+  </footer>
+
+  <script>
+    async function loadCartes() {
+      const container = document.getElementById("cartes-list");
+      if (!container) return;
+
+      try {
+        // index.json est dans le même dossier que cette page
+        const res = await fetch("./index.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const cartes = await res.json();
+        if (!Array.isArray(cartes) || cartes.length === 0) {
+          container.innerHTML = "<p>Aucune carte pour le moment.</p>";
+          return;
+        }
+
+        container.innerHTML = cartes.map(c => {
+          const titre = c.titre ?? "Carte";
+          const meta = [
+            c.region ? `<strong>${c.region}</strong>` : "",
+            c.commune ?? "",
+            c.date ?? "",
+            c.echelle ? `Échelle ${c.echelle}` : ""
+          ].filter(Boolean).join(" — ");
+
+          return `
+            <article class="card">
+              <div class="row">
+                <img
+                  class="thumb"
+                  src="${c.thumb}"
+                  alt="Vignette ${titre}"
+                  loading="lazy">
+
+                <div class="body">
+                  <h3>${titre}</h3>
+                  <div class="meta">${meta}</div>
+                  <p class="note">
+                    Cette carte est destinée à l’application E_PUNCH.
+                  </p>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+      } catch (e) {
+        container.innerHTML = `
+          <div class="error">
+            <strong>Erreur :</strong> impossible de charger la liste des cartes.<br>
+            Vérifie le fichier <code>/cartes/index.json</code>.
+          </div>
+        `;
+      }
+    }
+
+    loadCartes();
+  </script>
+</body>
+</html>

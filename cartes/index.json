@@ -1,12 +1,15 @@
 [
   {
-    "titre": "Carte de Sémécourt",
+    "titre": "Carte de Semécourt",
     "region": "Grand Est",
-    "commune": "Sémécourt",
+    "commune": "Semécourt",
     "date": "2025",
     "echelle": "1:4000",
+
+    "thumb": "./data/SEMECOURT_thumb.jpg",
 
     "image": "./data/SEMECOURT.png",
     "pgw": "./data/SEMECOURT.pgw"
   }
 ]
+

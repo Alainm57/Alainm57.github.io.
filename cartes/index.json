@@ -10,6 +10,16 @@
 
     "image": "./data/SEMECOURT.png",
     "pgw": "./data/SEMECOURT.pgw"
+  },
+  {
+    "titre": "Carte POPY_1000",
+    "region": "Auvergne-Rhône-Alpes",
+    "commune": "Belleville-en-Beaujolais",
+    "date": "2025",
+    "echelle": "1:1000",
+    "thumb": "./data/POPY_1000_thumb.jpg",
+    "image": "./data/POPY_1000.png",
+    "pgw": "./data/POPY_1000.pgw"
   }
 ]
 

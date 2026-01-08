@@ -4,12 +4,78 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>E_PUNCH</title>
+
+  <!-- CSS existant -->
   <link rel="stylesheet" href="/assets/css/site.css" />
+
+  <!-- Styles légers spécifiques à la page d'accueil -->
+  <style>
+    .hero h1 {
+      margin-bottom: 0.2em;
+    }
+
+    .hero .subtitle {
+      font-size: 1.1em;
+      opacity: 0.85;
+      margin-bottom: 1em;
+    }
+
+    .download {
+      margin-top: 2em;
+      padding: 1.5em;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 12px;
+    }
+
+    .download h2 {
+      margin-top: 0;
+    }
+
+    .stores {
+      display: flex;
+      gap: 1.5em;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1em;
+    }
+
+    .store {
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 12px;
+      padding: 1em;
+      max-width: 300px;
+      flex: 1 1 260px;
+    }
+
+    .store img {
+      width: 220px;
+      height: auto;
+      display: block;
+      margin: 0 auto 0.5em;
+    }
+
+    .store .label {
+      font-weight: bold;
+      margin-bottom: 0.3em;
+    }
+
+    .store .small {
+      font-size: 0.85em;
+      opacity: 0.75;
+    }
+  </style>
 </head>
+
 <body>
+
+  <!-- HEADER (code initial conservé) -->
   <header class="top">
     <div class="wrap">
       <a class="brand" href="/">E_PUNCH</a>
+
       <nav class="nav">
         <a href="/app/">L’app</a>
         <a href="/cartes/">Cartes</a>
@@ -19,17 +85,75 @@
     </div>
   </header>
 
+  <!-- CONTENU PRINCIPAL -->
   <main class="wrap">
-    <h1>E_PUNCH</h1>
-    <p>Application de pointage de balises d’orientation.</p>
 
-    <p>
-      <a href="/cartes/">➡️ Voir les cartes disponibles</a>
-    </p>
+    <!-- DESCRIPTION -->
+    <section class="hero">
+      <h1>E_PUNCH</h1>
+      <p class="subtitle">Application de pointage NFC pour la course d’orientation</p>
+
+      <p>
+        <strong>E_PUNCH</strong> transforme la course d’orientation en une expérience
+        connectée et intuitive. Il suffit d’approcher son <strong>iPhone</strong> ou
+        smartphone <strong>Android</strong> d’une balise équipée d’un
+        <strong>tag NFC</strong> pour enregistrer instantanément son passage.
+      </p>
+
+      <p>
+        En fin de parcours, l’application fournit un <strong>listing clair et précis</strong>
+        indiquant les <strong>horaires de passage à chaque balise</strong> ainsi que le
+        <strong>temps écoulé entre deux balises consécutives</strong>.
+        Une solution simple, rapide et ludique, parfaitement adaptée aux
+        <strong>entraînements</strong> et aux <strong>randonnées d’orientation</strong>.
+      </p>
+
+      <p>
+        <a href="/cartes/">➡️ Voir les cartes disponibles</a>
+      </p>
+    </section>
+
+    <!-- TELECHARGEMENT -->
+    <section class="download">
+      <h2>📥 Télécharger l’application</h2>
+
+      <div class="stores">
+
+        <!-- App Store -->
+        <a class="store"
+           href="https://apps.apple.com/fr/app/e-punch/id6752672900"
+           target="_blank"
+           rel="noopener">
+
+          <img src="/assets/img/epunch_qr_appstore.png"
+               alt="QR code App Store E_PUNCH">
+
+          <div class="label">App Store (iPhone)</div>
+          <div class="small">Scanner avec l’appareil photo</div>
+        </a>
+
+        <!-- Google Play -->
+        <a class="store"
+           href="https://play.google.com/store/apps/details?id=com.mouchette.epunch"
+           target="_blank"
+           rel="noopener">
+
+          <img src="/assets/img/epunch_qr_googleplay.png"
+               alt="QR code Google Play E_PUNCH">
+
+          <div class="label">Google Play (Android)</div>
+          <div class="small">Scanner avec l’appareil photo</div>
+        </a>
+
+      </div>
+    </section>
+
   </main>
 
+  <!-- FOOTER (code initial conservé) -->
   <footer class="footer">
     <div class="wrap">© E_PUNCH</div>
   </footer>
+
 </body>
 </html>

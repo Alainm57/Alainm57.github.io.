@@ -134,13 +134,14 @@
         }).join("");
 
       } catch (e) {
-        container.innerHTML = `
-          <div class="error">
-            <strong>Erreur :</strong> impossible de charger la liste des cartes.<br>
-            Vérifie le fichier <code>/cartes/index.json</code>.
-          </div>
-        `;
-      }
+  container.innerHTML = `
+    <div class="error">
+      <strong>Erreur :</strong> ${String(e)}<br>
+      URL testée : <code>${location.pathname.replace(/\/$/, '')}/index.json</code>
+    </div>
+  `;
+}
+
     }
 
     loadCartes();

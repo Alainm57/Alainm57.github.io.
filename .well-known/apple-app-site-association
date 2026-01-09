@@ -1,1 +1,15 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TONTEAMID.com.mouchette.epunch",
+        "paths": [
+          "/open-map",
+          "/open-map/*"
+        ]
+      }
+    ]
+  }
+}
 

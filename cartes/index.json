@@ -1,5 +1,8 @@
 [
   {
+    "id": "SEMECOURT",
+    "openUrl": "/open-map?id=SEMECOURT",
+
     "titre": "Carte de Semécourt",
     "region": "Grand Est",
     "commune": "Semécourt",
@@ -7,16 +10,19 @@
     "echelle": "1:4000",
 
     "thumb": "./data/SEMECOURT_thumb.jpg",
-
     "image": "./data/SEMECOURT.png",
     "pgw": "./data/SEMECOURT.pgw"
   },
   {
+    "id": "POPY_1000",
+    "openUrl": "/open-map?id=POPY_1000",
+
     "titre": "Carte POPY_1000",
     "region": "Auvergne-Rhône-Alpes",
     "commune": "Belleville-en-Beaujolais",
     "date": "2025",
     "echelle": "1:1000",
+
     "thumb": "./data/POPY_1000_thumb.jpg",
     "image": "./data/POPY_1000.png",
     "pgw": "./data/POPY_1000.pgw"

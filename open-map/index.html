@@ -1,3 +1,17 @@
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
 
-const thumbUrl = `/cartes/${id}_thumb.png`;
+  if (!id) {
+    document.body.innerHTML = "<p>Carte non définie.</p>";
+  } else {
+    const thumbUrl = `/cartes/${id}_thumb.png`;
 
+    const img = document.createElement("img");
+    img.src = thumbUrl;
+    img.alt = `Aperçu ${id}`;
+    img.style.maxWidth = "100%";
+
+    document.body.appendChild(img);
+  }
+</script>

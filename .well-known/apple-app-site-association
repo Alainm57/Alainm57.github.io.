@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "4RV95552HS.com.mouchette.epunch",
+        "appID": "4RV95552HS.Alain.PUNCHMAP",
         "paths": [
           "/open-map",
           "/open-map/*"
@@ -12,4 +12,3 @@
     ]
   }
 }
-

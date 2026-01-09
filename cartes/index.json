@@ -1,7 +1,7 @@
 [
   {
     "id": "SEMECOURT",
-    "openUrl": "/open-map?id=SEMECOURT",
+    "openUrl": "/open-map/?id=SEMECOURT",
 
     "titre": "Carte de Semécourt",
     "region": "Grand Est",
@@ -15,7 +15,7 @@
   },
   {
     "id": "POPY_1000",
-    "openUrl": "/open-map?id=POPY_1000",
+    "openUrl": "/open-map/?id=POPY_1000",
 
     "titre": "Carte POPY_1000",
     "region": "Auvergne-Rhône-Alpes",

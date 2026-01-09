@@ -9,7 +9,7 @@
     "date": "2025",
     "echelle": "1:4000",
 
-    "thumb": "./data/SEMECOURT_thumb.jpg",
+   "thumb": "/cartes/data/SEMECOURT_thumb.jpg"
     "image": "./data/SEMECOURT.png",
     "pgw": "./data/SEMECOURT.pgw"
   },
@@ -23,7 +23,7 @@
     "date": "2025",
     "echelle": "1:1000",
 
-    "thumb": "./data/POPY_1000_thumb.jpg",
+    "thumb": "/cartes/data/POPY_1000_thumb.jpg",
     "image": "./data/POPY_1000.png",
     "pgw": "./data/POPY_1000.pgw"
   }

@@ -1,17 +1,75 @@
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E_PUNCH — Ouvrir une carte</title>
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <style>
+    .wrap { max-width: 720px; margin: 0 auto; padding: 18px; }
+    .card { border: 1px solid rgba(0,0,0,.12); border-radius: 14px; padding: 14px; background: rgba(255,255,255,.6); }
+    .thumb { width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(0,0,0,.12); display:block; }
+    .btn { display:inline-block; padding:12px 14px; border-radius:12px; border:1px solid rgba(0,0,0,.18); text-decoration:none; font-weight:600; }
+    .btn.primary { background:#0a7a2f; color:#fff; border-color:#0a7a2f; }
+    .muted { opacity:.8; }
+    .sp { height: 12px; }
+  </style>
+</head>
 
-  if (!id) {
-    document.body.innerHTML = "<p>Carte non définie.</p>";
-  } else {
-    const thumbUrl = `/cartes/${id}_thumb.png`;
+<body>
+  <!-- HEADER -->
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="/">E_PUNCH</a>
+      <nav class="nav">
+        <a href="/app/">L’app</a>
+        <a href="/cartes/">Cartes</a>
+        <a href="/support/">Support</a>
+        <a href="/legal/">Mentions légales</a>
+      </nav>
+    </div>
+  </header>
 
-    const img = document.createElement("img");
-    img.src = thumbUrl;
-    img.alt = `Aperçu ${id}`;
-    img.style.maxWidth = "100%";
+  <main class="wrap">
+    <h1>Carte</h1>
 
-    document.body.appendChild(img);
-  }
-</script>
+    <div id="content" class="card">
+      <p>Chargement…</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">© E_PUNCH</div>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const content = document.getElementById("content");
+
+    if (!id) {
+      content.innerHTML = `
+        <p><strong>Erreur :</strong> aucune carte indiquée (paramètre <code>id</code> manquant).</p>
+        <p class="muted">Retourne sur la page <a href="/cartes/">Cartes</a> et clique à nouveau sur une vignette.</p>
+      `;
+    } else {
+      // ✅ chemin absolu vers la vignette (adapte si ton nom de fichier diffère)
+      const thumbUrl = `/cartes/data/${encodeURIComponent(id)}_thumb.jpg`;
+
+      content.innerHTML = `
+        <img class="thumb" src="${thumbUrl}" alt="Aperçu ${id}"
+             onerror="this.insertAdjacentHTML('afterend','<p class=muted>Aperçu introuvable : ${thumbUrl}</p>'); this.remove();">
+        <div class="sp"></div>
+        <p><strong>${id}</strong></p>
+        <p class="muted">
+          Cette carte se charge via l’application E_PUNCH (ou PUNCHMAP en phase de test).
+        </p>
+        <div class="sp"></div>
+        <a class="btn primary" href="#">Ouvrir dans l’application</a>
+        <a class="btn" href="/app/">Installer / découvrir E_PUNCH</a>
+      `;
+    }
+  </script>
+</body>
+</html>

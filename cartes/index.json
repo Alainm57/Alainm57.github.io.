@@ -10,8 +10,8 @@
     "echelle": "1:4000",
 
    "thumb": "/cartes/data/SEMECOURT_thumb.jpg",
-    "image": "./data/SEMECOURT.png",
-    "pgw": "./data/SEMECOURT.pgw"
+    "image": "/cartes/data/SEMECOURT.png",
+    "pgw": "/cartes/data/SEMECOURT.pgw"
   },
   {
     "id": "POPY_1000",
@@ -24,8 +24,8 @@
     "echelle": "1:1000",
 
     "thumb": "/cartes/data/POPY_1000_thumb.jpg",
-    "image": "./data/POPY_1000.png",
-    "pgw": "./data/POPY_1000.pgw"
+    "image": "/cartes/data/POPY_1000.png",
+    "pgw": "/cartes/data/POPY_1000.pgw"
   }
 ]
 

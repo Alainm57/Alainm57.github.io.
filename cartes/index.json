@@ -26,6 +26,34 @@
     "thumb": "/cartes/data/POPY_1000_thumb.jpg",
     "image": "/cartes/data/POPY_1000.png",
     "pgw": "/cartes/data/POPY_1000.pgw"
+  },
+  {
+    "id": "KEDANGE_10000",
+    "openUrl": "/open-map/?id=KEDANGE_10000",
+
+    "titre": "Carte KEDANGE_10000",
+    "region": "Grand Est",
+    "commune": "KEDANGE",
+    "date": "2026",
+    "echelle": "1:10000",
+
+    "thumb": "/cartes/data/KEDANGE_10000_thumb.jpg",
+    "image": "/cartes/data/KEDANGE_10000.png",
+    "pgw": "/cartes/data/KEDANGE_10000.pgw"
+  },
+  {
+    "id": "Les 3 Villages_10000",
+    "openUrl": "/open-map/?id=Les 3 Villages_10000",
+
+    "titre": "Carte Les 3 Villages_10000",
+    "region": "Grand Est",
+    "commune": "SEMECOURT FEVES NORROY le VENEUR",
+    "date": "2025",
+    "echelle": "1:10000",
+
+    "thumb": "/cartes/data/Les 3 Villages_10000_thumb.jpg",
+    "image": "/cartes/data/Les 3 Villages_10000.png",
+    "pgw": "/cartes/data/Les 3 Villages_10000.pgw"
   }
 ]
 

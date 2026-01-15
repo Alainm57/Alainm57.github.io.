@@ -9,9 +9,10 @@
     "date": "2025",
     "echelle": "1:4000",
 
-   "thumb": "/cartes/data/57/competitions/SEMECOURT_thumb.jpg",
+    "thumb": "/cartes/data/57/competitions/SEMECOURT_thumb.jpg",
     "image": "/cartes/data/57/competitions/SEMECOURT.png",
     "pgw": "/cartes/data/57/competitions/SEMECOURT.pgw"
+
   },
   {
     "id": "POPY_1000",

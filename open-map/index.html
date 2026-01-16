@@ -1,67 +1,95 @@
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-  const content = document.getElementById("content");
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E_PUNCH — Ouvrir une carte</title>
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <style>
+    .wrap { max-width: 720px; margin: 0 auto; padding: 18px; }
+    .card { border: 1px solid rgba(0,0,0,.12); border-radius: 14px; padding: 14px; background: rgba(255,255,255,.6); }
+    .thumb { width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(0,0,0,.12); display:block; }
+    .btn { display:inline-block; padding:12px 14px; border-radius:12px; border:1px solid rgba(0,0,0,.18); text-decoration:none; font-weight:600; }
+    .primary { background:#0a7; color:#fff; border-color:transparent; }
+    .muted { opacity:.75; }
+    .sp { height: 10px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" id="content">
+      Chargement…
+    </div>
+  </div>
 
-  async function load() {
-    if (!content) return;
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const content = document.getElementById("content");
 
-    if (!id) {
+    async function load() {
+      if (!content) {
+        document.body.insertAdjacentHTML("afterbegin", "<p>Erreur: #content introuvable</p>");
+        return;
+      }
+
+      if (!id) {
+        content.innerHTML = `
+          <p><strong>Erreur :</strong> paramètre <code>id</code> manquant.</p>
+          <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
+        `;
+        return;
+      }
+
+      const res = await fetch("/cartes/index.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("index.json introuvable (HTTP " + res.status + ")");
+
+      const cartes = await res.json();
+      const c = Array.isArray(cartes) ? cartes.find(x => x.id === id) : null;
+
+      if (!c) {
+        content.innerHTML = `
+          <p><strong>Carte introuvable :</strong> <code>${id}</code></p>
+          <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
+        `;
+        return;
+      }
+
+      const thumbUrl = c.thumb;
+      const titre = c.titre ?? c.id;
+      const meta = [
+        c.region ? `<strong>${c.region}</strong>` : "",
+        c.commune ?? "",
+        c.date ?? "",
+        c.echelle ? `Échelle ${c.echelle}` : ""
+      ].filter(Boolean).join(" — ");
+
       content.innerHTML = `
-        <p><strong>Erreur :</strong> paramètre <code>id</code> manquant.</p>
+        ${thumbUrl ? `
+          <img class="thumb" src="${thumbUrl}" alt="Aperçu ${c.id}"
+               onerror="this.insertAdjacentHTML('afterend','<p class=muted>Aperçu introuvable : ${thumbUrl}</p>'); this.remove();">
+        ` : `<p class="muted">Pas de vignette définie.</p>`}
+
+        <div class="sp"></div>
+        <p><strong>${titre}</strong></p>
+        <p class="muted">${meta}</p>
+
+        <div class="sp"></div>
+        <a class="btn primary" href="${c.openUrl ?? ('/open-map/?id=' + encodeURIComponent(c.id))}">Ouvrir dans l’application</a>
+        <div class="sp"></div>
         <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
       `;
-      return;
     }
 
-    const res = await fetch("/cartes/index.json", { cache: "no-store" });
-    if (!res.ok) throw new Error("index.json introuvable (HTTP " + res.status + ")");
-
-    const cartes = await res.json();
-    const c = Array.isArray(cartes) ? cartes.find(x => x.id === id) : null;
-
-    if (!c) {
-      content.innerHTML = `
-        <p><strong>Carte introuvable :</strong> <code>${id}</code></p>
-        <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
-      `;
-      return;
-    }
-
-    const thumbUrl = c.thumb;
-    const titre = c.titre ?? c.id;
-    const meta = [
-      c.region ? `<strong>${c.region}</strong>` : "",
-      c.commune ?? "",
-      c.date ?? "",
-      c.echelle ? `Échelle ${c.echelle}` : ""
-    ].filter(Boolean).join(" — ");
-
-    content.innerHTML = `
-      ${thumbUrl ? `
-        <img class="thumb" src="${thumbUrl}" alt="Aperçu ${c.id}"
-             onerror="this.insertAdjacentHTML('afterend','<p class=muted>Aperçu introuvable : ${thumbUrl}</p>'); this.remove();">
-      ` : `<p class="muted">Pas de vignette définie.</p>`}
-
-      <div class="sp"></div>
-      <p><strong>${titre}</strong></p>
-      <p class="muted">${meta}</p>
-
-      <div class="sp"></div>
-      <a class="btn primary" href="${c.openUrl ?? ('/open-map/?id=' + encodeURIComponent(c.id))}">Ouvrir dans l’application</a>
-      <div class="sp"></div>
-      <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
-    `;
-  }
-
-  load().catch(err => {
-    if (content) {
-      content.innerHTML = `
-        <p><strong>Erreur :</strong> ${err.message}</p>
-        <p class="muted">Test : <a href="/cartes/index.json">/cartes/index.json</a></p>
-      `;
-    }
-    console.error(err);
-  });
-</script>
-
+    load().catch(err => {
+      if (content) {
+        content.innerHTML = `
+          <p><strong>Erreur :</strong> ${err.message}</p>
+          <p class="muted">Test : <a href="/cartes/index.json">/cartes/index.json</a></p>
+        `;
+      }
+      console.error(err);
+    });
+  </script>
+</body>
+</html>

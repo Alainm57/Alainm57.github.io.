@@ -4,15 +4,16 @@
   const content = document.getElementById("content");
 
   async function load() {
+    if (!content) return;
+
     if (!id) {
       content.innerHTML = `
-        <p><strong>Erreur :</strong> aucune carte indiquée (paramètre <code>id</code> manquant).</p>
-        <p class="muted">Retourne sur la page <a href="/cartes/">Cartes</a> et clique à nouveau sur une vignette.</p>
+        <p><strong>Erreur :</strong> paramètre <code>id</code> manquant.</p>
+        <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
       `;
       return;
     }
 
-    // Charger l’index JSON des cartes
     const res = await fetch("/cartes/index.json", { cache: "no-store" });
     if (!res.ok) throw new Error("index.json introuvable (HTTP " + res.status + ")");
 
@@ -22,7 +23,6 @@
     if (!c) {
       content.innerHTML = `
         <p><strong>Carte introuvable :</strong> <code>${id}</code></p>
-        <p class="muted">Vérifie que l’entrée existe dans <code>/cartes/index.json</code>.</p>
         <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
       `;
       return;
@@ -41,25 +41,27 @@
       ${thumbUrl ? `
         <img class="thumb" src="${thumbUrl}" alt="Aperçu ${c.id}"
              onerror="this.insertAdjacentHTML('afterend','<p class=muted>Aperçu introuvable : ${thumbUrl}</p>'); this.remove();">
-      ` : `<p class="muted">Pas de vignette définie pour cette carte.</p>`}
+      ` : `<p class="muted">Pas de vignette définie.</p>`}
 
       <div class="sp"></div>
-
       <p><strong>${titre}</strong></p>
       <p class="muted">${meta}</p>
 
       <div class="sp"></div>
-      <p class="muted">Cette carte se charge via l’application E_PUNCH.</p>
+      <a class="btn primary" href="${c.openUrl ?? ('/open-map/?id=' + encodeURIComponent(c.id))}">Ouvrir dans l’application</a>
+      <div class="sp"></div>
       <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
     `;
   }
 
   load().catch(err => {
-    content.innerHTML = `
-      <p><strong>Erreur :</strong> ${err.message}</p>
-      <p class="muted">Vérifie que <code>/cartes/index.json</code> est accessible.</p>
-      <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
-    `;
+    if (content) {
+      content.innerHTML = `
+        <p><strong>Erreur :</strong> ${err.message}</p>
+        <p class="muted">Test : <a href="/cartes/index.json">/cartes/index.json</a></p>
+      `;
+    }
     console.error(err);
   });
 </script>
+

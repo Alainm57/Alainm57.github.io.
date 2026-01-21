@@ -17,6 +17,18 @@
       min-height: 20px;
       color: #000;
     }
+
+    /* ✅ Bandeau d'info (jaune pâle) */
+    .notice {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #fff7cc;              /* jaune pâle */
+      border: 1px solid rgba(0,0,0,.12);
+      color: rgba(0,0,0,.85);
+      font-size: 0.95rem;
+      line-height: 1.25rem;
+    }
   </style>
 </head>
 
@@ -41,22 +53,10 @@
       return isNaN(d.getTime()) ? null : d;
     }
 
-    function formatHHMM(date) {
-      return new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" }).format(date);
-    }
-
     function formatDDMM_HHMM(date) {
       // Exemple : 02/01 à 14:00
-      const d = new Intl.DateTimeFormat("fr-FR", {
-        day: "2-digit",
-        month: "2-digit"
-      }).format(date);
-
-      const t = new Intl.DateTimeFormat("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit"
-      }).format(date);
-
+      const d = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit" }).format(date);
+      const t = new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" }).format(date);
       return `${d} à ${t}`;
     }
 
@@ -112,9 +112,9 @@
             ? `<p class="muted"><strong>Carte visible</strong></p>`
             : ``);
 
-      // ✅ Message uniquement quand la carte est verrouillée (compétition)
+      // ✅ Bandeau uniquement si verrouillée
       const competitionNote = locked
-        ? `<p class="muted"><em>Par équité, carte masquée jusqu’à l’heure d’ouverture. Chargez-la avant la course pour enregistrer votre trace.</em></p>`
+        ? `<div class="notice">Par équité, carte masquée jusqu’à l’heure d’ouverture. Chargez-la avant la course pour enregistrer votre trace.</div>`
         : ``;
 
       content.innerHTML = `

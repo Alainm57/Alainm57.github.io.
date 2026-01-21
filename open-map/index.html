@@ -11,7 +11,12 @@
 
   <style>
     .wrap { max-width: 720px; margin: 0 auto; padding: 18px; }
-    .card { border: 1px solid rgba(0,0,0,.12); border-radius: 14px; padding: 14px; background: rgba(255,255,255,.6); }
+    .card {
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,.6);
+    }
     .thumb { width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(0,0,0,.12); display:block; }
     .muted { opacity:.75; }
     .sp { height: 10px; }
@@ -51,6 +56,38 @@
       flex: 0 0 auto;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ✅ Barre sticky + bouton "Ouvrir" toujours visible */
+    .stickyBar{
+      position: sticky;
+      bottom: 0;
+      margin-top: 12px;
+      padding-top: 10px;
+      padding-bottom: 2px;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.92) 35%,
+        rgba(255,255,255,.98)
+      );
+    }
+
+    .btnWide{
+      display:block;
+      width:100%;
+      text-align:center;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,.18);
+      text-decoration:none;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .btnPrimary{
+      background:#1f6feb;
+      color:#fff;
+    }
   </style>
 </head>
 
@@ -104,6 +141,15 @@
       const revealDate = parseRevealAt(card.revealAt);
       if (!revealDate) return false;
       return new Date() < revealDate;
+    }
+
+    function absoluteUrl(u) {
+      // Rend une URL absolue si besoin (pratique si openUrl est relatif)
+      try {
+        return new URL(u, window.location.origin).toString();
+      } catch {
+        return u;
+      }
     }
 
     async function load() {
@@ -169,6 +215,17 @@
         ? `<div class="notice">Par équité, carte masquée jusqu’à l’heure d’ouverture. Chargez-la avant la course pour enregistrer votre trace.</div>`
         : ``;
 
+      // ✅ Bouton "Ouvrir" : utilise openUrl si fourni, sinon retombe sur open-map?id=...
+      const openLink = c.openUrl
+        ? absoluteUrl(c.openUrl)
+        : absoluteUrl(`/open-map/?id=${encodeURIComponent(c.id)}`);
+
+      const openButton = `
+        <div class="stickyBar">
+          <a class="btnWide btnPrimary" href="${openLink}">Ouvrir dans l’application</a>
+        </div>
+      `;
+
       content.innerHTML = `
         ${thumbUrl ? `
           <img class="thumb" src="${thumbUrl}" alt="Aperçu ${c.id}">
@@ -179,6 +236,9 @@
         <p class="muted">${meta}</p>
         ${lockLine}
         ${competitionNote}
+
+        ${openButton}
+
         <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
       `;
     }

@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>E_PUNCH — Ouvrir une carte</title>
   <link rel="stylesheet" href="/assets/css/site.css" />
+
+  <!-- ✅ Aide le navigateur à démarrer plus tôt le fetch du JSON -->
+  <link rel="preload" as="fetch" href="/cartes/index.json" crossorigin>
+
   <style>
     .wrap { max-width: 720px; margin: 0 auto; padding: 18px; }
     .card { border: 1px solid rgba(0,0,0,.12); border-radius: 14px; padding: 14px; background: rgba(255,255,255,.6); }
@@ -29,13 +33,35 @@
       font-size: 0.95rem;
       line-height: 1.25rem;
     }
+
+    /* ✅ Loader visible (évite l’effet “page blanche”) */
+    .loader {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0,0,0,.15);
+      border-top-color: rgba(0,0,0,.55);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      flex: 0 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="card" id="content">
-      <p class="muted">Chargement…</p>
+      <div class="loader">
+        <div class="spinner"></div>
+        <p class="muted" style="margin:0">Chargement…</p>
+      </div>
+
       <noscript>
         <p><strong>JavaScript est désactivé</strong> : la page ne peut pas afficher la carte.</p>
       </noscript>
@@ -49,12 +75,24 @@
 
     function parseRevealAt(revealAt) {
       if (!revealAt || typeof revealAt !== "string") return null;
-      const d = new Date(revealAt);
+
+      let s = revealAt.trim();
+
+      // Accepte "YYYY-MM-DD HH:mm" -> "YYYY-MM-DDTHH:mm:00"
+      if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(s)) {
+        s = s.replace(/\s+/, "T") + ":00";
+      }
+
+      // Accepte "YYYY-MM-DDTHH:mm" -> "YYYY-MM-DDTHH:mm:00"
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(s)) {
+        s = s + ":00";
+      }
+
+      const d = new Date(s);
       return isNaN(d.getTime()) ? null : d;
     }
 
     function formatDDMM_HHMM(date) {
-      // Exemple : 02/01 à 14:00
       const d = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit" }).format(date);
       const t = new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" }).format(date);
       return `${d} à ${t}`;
@@ -79,6 +117,14 @@
         return;
       }
 
+      // ✅ Affiche tout de suite un loader explicite avec l’ID
+      content.innerHTML = `
+        <div class="loader">
+          <div class="spinner"></div>
+          <p class="muted" style="margin:0">Chargement de <strong>${id}</strong>…</p>
+        </div>
+      `;
+
       const res = await fetch("/cartes/index.json", { cache: "no-store" });
       if (!res.ok) throw new Error("index.json introuvable (HTTP " + res.status + ")");
 
@@ -91,6 +137,12 @@
           <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
         `;
         return;
+      }
+
+      // ✅ Précharge la vignette pour réduire le “blanc” quand elle arrive
+      if (c.thumb) {
+        const pre = new Image();
+        pre.src = c.thumb;
       }
 
       const thumbUrl = c.thumb;

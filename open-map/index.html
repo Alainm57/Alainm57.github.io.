@@ -20,82 +20,103 @@
   color: #000 !important;
   min-height: 20px;
 }
-  </style>
-</head>
-<body>
- 
-  <div class="wrap">
-    <div class="card" id="content">
-      Chargement…
-    </div>
-  </div>
-
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-    const content = document.getElementById("content");
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  const content = document.getElementById("content");
 
-    async function load() {
-      if (!content) {
-        document.body.insertAdjacentHTML("afterbegin", "<p>Erreur: #content introuvable</p>");
-        return;
-      }
+  function parseRevealAt(revealAt) {
+    if (!revealAt || typeof revealAt !== "string") return null;
+    const d = new Date(revealAt);
+    return isNaN(d.getTime()) ? null : d;
+  }
 
-      if (!id) {
-        content.innerHTML = `
-          <p><strong>Erreur :</strong> paramètre <code>id</code> manquant.</p>
-          <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
-        `;
-        return;
-      }
+  function formatHHMM(date) {
+    return new Intl.DateTimeFormat("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(date);
+  }
 
-      const res = await fetch("/cartes/index.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("index.json introuvable (HTTP " + res.status + ")");
+  function isCompetitionLocked(card) {
+    if (!card) return false;
+    const usage = (card.usage || "").toLowerCase();
+    if (usage !== "competition") return false;
 
-      const cartes = await res.json();
-      const c = Array.isArray(cartes) ? cartes.find(x => x.id === id) : null;
+    const revealDate = parseRevealAt(card.revealAt);
+    if (!revealDate) return false; // si revealAt manquant/invalid -> on ne bloque pas
+    return new Date() < revealDate;
+  }
 
-      if (!c) {
-        content.innerHTML = `
-          <p><strong>Carte introuvable :</strong> <code>${id}</code></p>
-          <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
-        `;
-        return;
-      }
-
-      const thumbUrl = c.thumb;
-      const titre = c.titre ?? c.id;
-      const meta = [
-        c.region ? `<strong>${c.region}</strong>` : "",
-        c.commune ?? "",
-        c.date ?? "",
-        c.echelle ? `Échelle ${c.echelle}` : ""
-      ].filter(Boolean).join(" — ");
-
-      content.innerHTML = `
-        ${thumbUrl ? `
-          <img class="thumb" src="${thumbUrl}" alt="Aperçu ${c.id}"
-               onerror="this.insertAdjacentHTML('afterend','<p class=muted>Aperçu introuvable : ${thumbUrl}</p>'); this.remove();">
-        ` : `<p class="muted">Pas de vignette définie.</p>`}
-
-        <div class="sp"></div>
-        <p><strong>${titre}</strong></p>
-        <p class="muted">${meta}</p>
-
-       
-        <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
-      `;
+  async function load() {
+    if (!content) {
+      document.body.insertAdjacentHTML("afterbegin", "<p>Erreur: #content introuvable</p>");
+      return;
     }
 
-    load().catch(err => {
-      if (content) {
-        content.innerHTML = `
-          <p><strong>Erreur :</strong> ${err.message}</p>
-          <p class="muted">Test : <a href="/cartes/index.json">/cartes/index.json</a></p>
-        `;
-      }
-      console.error(err);
-    });
-  </script>
-</body>
-</html>
+    if (!id) {
+      content.innerHTML = `
+        <p><strong>Erreur :</strong> paramètre <code>id</code> manquant.</p>
+        <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
+      `;
+      return;
+    }
+
+    const res = await fetch("/cartes/index.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("index.json introuvable (HTTP " + res.status + ")");
+
+    const cartes = await res.json();
+    const c = Array.isArray(cartes) ? cartes.find(x => x.id === id) : null;
+
+    if (!c) {
+      content.innerHTML = `
+        <p><strong>Carte introuvable :</strong> <code>${id}</code></p>
+        <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
+      `;
+      return;
+    }
+
+    const thumbUrl = c.thumb;
+    const titre = c.titre ?? c.id;
+    const meta = [
+      c.region ? `<strong>${c.region}</strong>` : "",
+      c.commune ?? "",
+      c.date ?? "",
+      c.echelle ? `Échelle ${c.echelle}` : ""
+    ].filter(Boolean).join(" — ");
+
+    const locked = isCompetitionLocked(c);
+    const revealDate = parseRevealAt(c.revealAt);
+
+    const lockLine = locked && revealDate
+      ? `<p class="muted"><strong>Carte visible à partir de ${formatHHMM(revealDate)}</strong></p>`
+      : ( (c.usage || "").toLowerCase() === "competition"
+          ? `<p class="muted"><strong>Carte visible</strong></p>`
+          : `` );
+
+    content.innerHTML = `
+      ${thumbUrl ? `
+        <img class="thumb" src="${thumbUrl}" alt="Aperçu ${c.id}"
+             onerror="this.insertAdjacentHTML('afterend','<p class=muted>Aperçu introuvable : ${thumbUrl}</p>'); this.remove();">
+      ` : `<p class="muted">Pas de vignette définie.</p>`}
+
+      <div class="sp"></div>
+      <p><strong>${titre}</strong></p>
+      <p class="muted">${meta}</p>
+
+      ${lockLine}
+
+      <p class="muted"><a href="/cartes/">← Retour aux cartes</a></p>
+    `;
+  }
+
+  load().catch(err => {
+    if (content) {
+      content.innerHTML = `
+        <p><strong>Erreur :</strong> ${err.message}</p>
+        <p class="muted">Test : <a href="/cartes/index.json">/cartes/index.json</a></p>
+      `;
+    }
+    console.error(err);
+  });
+</script>

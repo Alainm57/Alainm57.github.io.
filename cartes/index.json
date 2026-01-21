@@ -15,6 +15,22 @@
     "image": "/cartes/data/57/divers/SEMECOURT.png",
     "pgw": "/cartes/data/57/divers/SEMECOURT.pgw"
   },
+{
+    "id": "RODEMACK",
+    "openUrl": "/open-map/?id=RODEMACK",
+    "titre": "Carte de Rodemack",
+    "region": "Grand Est",
+    "commune": "Rodemack",
+    "date": "2025",
+    "echelle": "1:4000",
+
+    "usage": "competition",
+    "revealAt": "2026-01-21T16:30:00+01:00",
+
+    "thumb": "/cartes/data/57/divers/RODEMACK_thumb.jpg",
+    "image": "/cartes/data/57/divers/RODEMACK.png",
+    "pgw": "/cartes/data/57/divers/RODEMACK.pgw"
+  },
 
   {
     "id": "POPY_1000",

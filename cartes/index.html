@@ -47,6 +47,29 @@
       border: 1px solid rgba(255,0,0,.25);
       border-radius: 12px;
     }
+
+    /* ✅ Ajouts */
+    .badges { display:flex; gap:8px; flex-wrap:wrap; margin: 0 0 10px; }
+    .badge {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.14);
+      background: rgba(255,255,255,.7);
+      font-size: .9em;
+      opacity: .9;
+      line-height: 1;
+    }
+    .badge.locked {
+      border-color: rgba(255,140,0,.25);
+      background: rgba(255,165,0,.12);
+    }
+    .badge.permanent {
+      border-color: rgba(0,128,0,.18);
+      background: rgba(0,128,0,.10);
+    }
   </style>
 </head>
 
@@ -84,14 +107,38 @@
   </footer>
 
   <script>
+    function parseRevealAt(revealAt) {
+      if (!revealAt || typeof revealAt !== "string") return null;
+      const d = new Date(revealAt);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function formatHHMM(date) {
+      return new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" }).format(date);
+    }
+
+    function usageOf(c) {
+      return String(c?.usage || "").toLowerCase();
+    }
+
+    function isCompetitionLocked(c) {
+      if (usageOf(c) !== "competition") return false;
+      const rd = parseRevealAt(c.revealAt);
+      if (!rd) return false;
+      return new Date() < rd;
+    }
+
+    function openMapUrlFromId(id) {
+      // ✅ robuste (espaces, accents…) -> encodé correctement
+      return "/open-map/?id=" + encodeURIComponent(id);
+    }
+
     async function loadCartes() {
       const container = document.getElementById("cartes-list");
       if (!container) return;
 
       try {
-        // index.json est dans le même dossier que cette page
         const res = await fetch("/cartes/index.json", { cache: "no-store" });
-
         if (!res.ok) throw new Error("HTTP " + res.status);
 
         const cartes = await res.json();
@@ -109,41 +156,57 @@
             c.echelle ? `Échelle ${c.echelle}` : ""
           ].filter(Boolean).join(" — ");
 
- 
-return `
-  <article class="card">
-    <div class="row">
-      <a href="${c.openUrl ?? '#'}" aria-label="Ouvrir ${titre}">
-        <img
-          class="thumb"
-          src="${c.thumb}"
-          alt="Vignette ${titre}"
-          loading="lazy">
-      </a>
+          const usage = usageOf(c);
+          const locked = isCompetitionLocked(c);
+          const revealDate = parseRevealAt(c.revealAt);
 
-      <div class="body">
-        <h3>${titre}</h3>
-        <div class="meta">${meta}</div>
-        <p class="note">
-          Cette carte est destinée à l’application E_PUNCH.
-        </p>
-      </div>
-    </div>
-  </article>
-`;
+          // ✅ on autorise toujours le clic (même competition verrouillée)
+          // et on ne dépend plus de c.openUrl
+          const href = openMapUrlFromId(c.id);
 
+          const badges = [];
+          if (usage === "permanent") {
+            badges.push(`<span class="badge permanent">✅ Permanent</span>`);
+          } else if (usage === "competition") {
+            if (locked && revealDate) {
+              badges.push(`<span class="badge locked">🏁 Compétition — visible à ${formatHHMM(revealDate)}</span>`);
+            } else {
+              badges.push(`<span class="badge">🏁 Compétition</span>`);
+            }
+          } else if (usage) {
+            badges.push(`<span class="badge">${usage}</span>`);
+          }
 
+          return `
+            <article class="card">
+              <div class="row">
+                <a href="${href}" aria-label="Ouvrir ${titre}">
+                  <img class="thumb" src="${c.thumb}" alt="Vignette ${titre}" loading="lazy">
+                </a>
+
+                <div class="body">
+                  <h3>${titre}</h3>
+                  <div class="meta">${meta}</div>
+
+                  ${badges.length ? `<div class="badges">${badges.join("")}</div>` : ""}
+
+                  <p class="note">
+                    Cette carte est destinée à l’application E_PUNCH.
+                  </p>
+                </div>
+              </div>
+            </article>
+          `;
         }).join("");
 
       } catch (e) {
-  container.innerHTML = `
-    <div class="error">
-      <strong>Erreur :</strong> ${String(e)}<br>
-      URL testée : <code>${location.pathname.replace(/\/$/, '')}/index.json</code>
-    </div>
-  `;
-}
-
+        container.innerHTML = `
+          <div class="error">
+            <strong>Erreur :</strong> ${String(e)}<br>
+            Test : <a href="/cartes/index.json">/cartes/index.json</a>
+          </div>
+        `;
+      }
     }
 
     loadCartes();

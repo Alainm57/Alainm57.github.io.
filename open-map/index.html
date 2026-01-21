@@ -44,6 +44,20 @@
     function formatHHMM(date) {
       return new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" }).format(date);
     }
+function formatDDMM_HHMM(date) {
+  // Exemple : 02/01 à 14:00
+  const d = new Intl.DateTimeFormat("fr-FR", {
+    day: "2-digit",
+    month: "2-digit"
+  }).format(date);
+
+  const t = new Intl.DateTimeFormat("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+
+  return `${d} à ${t}`;
+}
 
     function isCompetitionLocked(card) {
       const usage = (card?.usage || "").toLowerCase();
@@ -92,7 +106,8 @@
       const revealDate = parseRevealAt(c.revealAt);
 
       const lockLine = locked && revealDate
-        ? `<p class="muted"><strong>Carte visible à partir de ${formatHHMM(revealDate)}</strong></p>`
+        ? `<p class="muted"><strong>Carte visible à partir du ${formatDDMM_HHMM(revealDate)}</strong></p>`
+
         : ((c.usage || "").toLowerCase() === "competition"
             ? `<p class="muted"><strong>Carte visible</strong></p>`
             : ``);

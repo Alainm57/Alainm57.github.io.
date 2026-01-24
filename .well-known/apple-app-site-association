@@ -4,11 +4,10 @@
     "details": [
       {
         "appID": "4RV95552HS.Alain.E_PUNCH",
-        "paths": ["/open-map", "/open-map/*"]
-      },
-      {
-        "appID": "4RV95552HS.Alain.PUNCHMAP",
-        "paths": ["/punchmap/*"]
+        "paths": [
+          "/open-map",
+          "/open-map/*"
+        ]
       }
     ]
   }

@@ -3,11 +3,8 @@
     "apps": [],
     "details": [
       {
-        "appID": "4RV95552HS.com.MOUCHETTE.E-PUNCH",
-        "paths": [
-          "/open-map",
-          "/open-map/*"
-        ]
+        "appIDs": ["4RV95552HS.com.MOUCHETTE.E-PUNCH"],
+        "paths": ["/open-map", "/open-map/*"]
       }
     ]
   }

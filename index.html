@@ -76,24 +76,50 @@
       font-size: 0.85em;
       opacity: 0.75;
     }
+    .top .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  display: block;
+}
   </style>
 </head>
 
 <body>
 
   <!-- HEADER (code initial conservé) -->
-  <header class="top">
-    <div class="wrap">
-      <a class="brand" href="/">E_PUNCH</a>
+ <header class="top">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <img src="/assets/img/logo_epunch.png" alt="Logo E_PUNCH" class="brand-logo">
+      <span>E_PUNCH</span>
+    </a>
 
-      <nav class="nav">
-        <a href="/app/">L’app</a>
-        <a href="/cartes/">Cartes</a>
-        <a href="/support/">Support</a>
-        <a href="/legal/">Mentions légales</a>
-      </nav>
-    </div>
-  </header>
+    <nav class="nav">
+      <a href="/app/">L’app</a>
+      <a href="/cartes/">Cartes</a>
+      <a href="/support/">Support</a>
+      <a href="/legal/">Mentions légales</a>
+    </nav>
+  </div>
+</header>
 
   <!-- CONTENU PRINCIPAL -->
   <main class="wrap">
